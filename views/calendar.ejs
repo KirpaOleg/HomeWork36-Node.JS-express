@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cabinet</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+
+    <div>year:  <%= var1 %></div>
+    <div>month:  <%= var2 %></div>
+    <div>weekArr:  <%= weekArr %></div>
+    <div>daysOfMonth:  <%= daysOfMonth %></div>
+    <div>firstDay:  <%= firstDay %></div>
+
+    <div class="title-year">  <%= var1 %> <%= monthStr %></div>
+    
+    <table>
+      <tr class="header">
+        <td><%= weekArr[0] %></td> 
+        <td><%= weekArr[1] %></td>
+        <td><%= weekArr[2] %></td>
+        <td><%= weekArr[3] %></td>
+        <td><%= weekArr[4] %></td>
+        <td><%= weekArr[5] %></td>
+        <td><%= weekArr[6] %></td>
+      </tr>
+  
+
+    </table>
+
+  </body>
+</html>
