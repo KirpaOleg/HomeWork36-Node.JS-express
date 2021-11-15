@@ -36,19 +36,34 @@ router.get('/:var1/:var2/', (req, res) => {
     return this.charAt(0).toUpperCase() + this.slice(1);
   }
 
-  let year = data.year;
   let month = data.month;
   let monthStr = moment().month(month).format("MMMM").capitalize();
   let daysOfMonth = moment([data.year, data.month, 1]).daysInMonth();
   let firstDay = moment([data.year, data.month, 1]).format('e');
 
-   console.log('Year >>>>>', year);
-  console.log('Month >>>>>', month);
-  console.log('MonthStr >>>>>', monthStr);
-  console.log('Days of the Month >>>>>', daysOfMonth);
-  console.log('1-st day of the month >>>>>', weekArr[firstDay]);
+  const beginData = 1;
+  const endData = daysOfMonth;
+  const arrDates = [];
+  for (var i = beginData; i <= endData; i++) {
+    arrDates.push(i);
+  }
+  // console.log('arrDates >>>>>', arrDates);
 
-  res.render('calendar', {...profileObj, weekArr, daysOfMonth, firstDay, monthStr})
+  let calendar = [];
+  const startWeek = 1;
+  const endWeek = moment([data.year, data.month]).weeks();
+  // console.log('endWeek >>>>>', endWeek);
+
+  for(var week = startWeek; week < endWeek; week++){
+    calendar.push({
+      week:week,
+      days:Array(7).fill(0).map((n, i) => moment(arrDates).week(week).startOf('week').clone().add(n + i, 'day'))
+    })
+  }
+  console.log('week >>>>>', week);
+  console.log('calendar >>>>>', calendar);
+
+  res.render('calendar', {...profileObj, weekArr, daysOfMonth, firstDay, monthStr, calendar, arrDates})
 });
 
 module.exports = router;
