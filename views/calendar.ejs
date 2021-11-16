@@ -6,13 +6,12 @@
   </head>
   <body>
 
-    <div>year:  <%= var1 %></div>
-    <div>month:  <%= var2 %></div>
-    <div>weekArr:  <%= weekArr %></div>
-    <div>daysOfMonth:  <%= daysOfMonth %></div>
-    <div>firstDay:  <%= firstDay %></div>
+    <div>Год:  <%= year %></div>
+    <div>Месяц:  <b>'<%= month %>'</b> <%= monthStr %></div>
+    <div>Колличество дней в месяце:  <%= daysOfMonth %></div>
+    <div>Первый день месяца:  <%= firstDay %></div>
 
-    <div class="title-year">  <%= var1 %> <%= monthStr %></div>
+    <div class="title-year">  <%= year %> <%= monthStr %></div>
     
     <table>
       <tr class="header">
@@ -24,10 +23,8 @@
         <td><%= weekArr[5] %></td>
         <td><%= weekArr[6] %></td>
       </tr>
-      <%= arrDates %>
-
-
+      <%- table %> 
     </table>
-
+     
   </body>
 </html>

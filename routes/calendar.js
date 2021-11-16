@@ -8,15 +8,15 @@ router.get('/', (req, res) => {
   res.send('calendar');
 });
 
-router.get('/:var1/:var2/', (req, res) => {
-  console.log(req.params);
-  console.log(req.query);
+router.get('/:year/:month/', (req, res) => {
 
   const profileObj = {
-    var1: req.params.var1,
-    var2: req.params.var2,
+    year: req.params.year,
+    month: req.params.month,
+    daysOfMonth: moment([req.params.year, req.params.month, 1]).daysInMonth(),
+    firstDay: Number(moment([req.params.year, req.params.month, 1]).format('e')),
   }
- 
+
   const weekArr = [
     'Понедельник',
     'Вторник',
@@ -27,43 +27,47 @@ router.get('/:var1/:var2/', (req, res) => {
     'Воскресенье',
   ];
 
-  const data = {
-    year: req.params.var1,
-    month: req.params.var2,
-  }
-
   String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
   }
 
-  let month = data.month;
-  let monthStr = moment().month(month).format("MMMM").capitalize();
-  let daysOfMonth = moment([data.year, data.month, 1]).daysInMonth();
-  let firstDay = moment([data.year, data.month, 1]).format('e');
+  let monthStr = moment().month(profileObj.month).format("MMMM").capitalize();
 
-  const beginData = 1;
-  const endData = daysOfMonth;
-  const arrDates = [];
-  for (var i = beginData; i <= endData; i++) {
-    arrDates.push(i);
-  }
-  // console.log('arrDates >>>>>', arrDates);
+  const cellCount = getTotalCellCount(profileObj);
+  const table = generateTable(profileObj, cellCount)
 
-  let calendar = [];
-  const startWeek = 1;
-  const endWeek = moment([data.year, data.month]).weeks();
-  // console.log('endWeek >>>>>', endWeek);
-
-  for(var week = startWeek; week < endWeek; week++){
-    calendar.push({
-      week:week,
-      days:Array(7).fill(0).map((n, i) => moment(arrDates).week(week).startOf('week').clone().add(n + i, 'day'))
-    })
-  }
-  console.log('week >>>>>', week);
-  console.log('calendar >>>>>', calendar);
-
-  res.render('calendar', {...profileObj, weekArr, daysOfMonth, firstDay, monthStr, calendar, arrDates})
+  res.render('calendar', {...profileObj, weekArr, monthStr, table})
 });
 
-module.exports = router;
+const getTotalCellCount = (tempObj) => {
+  const sumStart = tempObj.daysOfMonth + tempObj.firstDay;
+  return (7 - (sumStart % 7)) + sumStart;
+};
+
+const generateTable = (tempObj, count) => {
+  let strMain = '';
+  let strTr = '';
+  let dayNumber = 0;
+  let weekend = (7 - ((tempObj.daysOfMonth + tempObj.firstDay) % 7)) + (tempObj.daysOfMonth + tempObj.firstDay)
+  for (let i = 0; i <= count; i++) {
+    if ((i % 7) === 0 && i !== 0) {
+      strMain += `<tr>${strTr}</tr>\n`;
+      dayNumber++
+      strTr = `<td>${dayNumber}</td>`;
+      console.log(weekend);
+    } else {
+      if (i >= tempObj.firstDay && i < (tempObj.daysOfMonth + tempObj.firstDay)) {
+        dayNumber++
+        strTr += `<td>${dayNumber}</td>`;
+      } else {
+        strTr += `<td class="red"></td>`;
+      } 
+    }
+  }
+  strMain = `<table>
+  
+  ${strMain}</table>`;
+  return strMain;
+}
+
+module.exports = router;  
